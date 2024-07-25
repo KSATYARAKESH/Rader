@@ -1,8 +1,7 @@
-import processing.serial.*; // imports library for serial communication
-import java.awt.event.KeyEvent; // imports library for reading the data from the serial port
+import processing.serial.*; 
+import java.awt.event.KeyEvent; 
 import java.io.IOException;
-Serial myPort; // defines Object Serial
-// defubes variables
+Serial myPort; 
 String angle="";
 String distance="";
 String data="";
@@ -14,42 +13,36 @@ int index2=0;
 PFont orcFont;
 void setup() {
   
- size (1200, 700); // **CHANGE THIS TO YOUR SCREEN RESOLUTION**
+ size (1200, 700); // *CHANGE THIS TO YOUR SCREEN RESOLUTION*
  smooth();
- myPort = new Serial(this,"COM3", 9600); // starts the serial communication
- myPort.bufferUntil('.'); // reads the data from the serial port up to the character '.'. So actually it reads this: angle,distance.
+ myPort = new Serial(this,"COM3", 9600); 
+ myPort.bufferUntil('.'); 
 }
 void draw() {
   
   fill(98,245,31);
-  // simulating motion blur and slow fade of the moving line
   noStroke();
   fill(0,4); 
   rect(0, 0, width, height-height*0.065); 
   
   fill(98,245,31); // green color
-  // calls the functions for drawing the radar
   drawRadar(); 
   drawLine();
   drawObject();
   drawText();
 }
-void serialEvent (Serial myPort) { // starts reading data from the Serial Port
-  // reads the data from the Serial Port up to the character '.' and puts it into the String variable "data".
+void serialEvent (Serial myPort) { 
   data = myPort.readStringUntil('.');
   data = data.substring(0,data.length()-1);
-  
-  index1 = data.indexOf(","); // find the character ',' and puts it into the variable "index1"
-  angle= data.substring(0, index1); // read the data from position "0" to position of the variable index1 or thats the value of the angle the Arduino Board sent into the Serial Port
-  distance= data.substring(index1+1, data.length()); // read the data from position "index1" to the end of the data pr thats the value of the distance
-  
-  // converts the String variables into Integer
+  index1 = data.indexOf(","); 
+  angle= data.substring(0, index1); 
+  distance= data.substring(index1+1, data.length()); 
   iAngle = int(angle);
   iDistance = int(distance);
 }
 void drawRadar() {
   pushMatrix();
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  translate(width/2,height-height*0.074); 
   noFill();
   strokeWeight(2);
   stroke(98,245,31);
@@ -70,13 +63,12 @@ void drawRadar() {
 }
 void drawObject() {
   pushMatrix();
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  translate(width/2,height-height*0.074); 
   strokeWeight(9);
   stroke(255,10,10); // red color
-  pixsDistance = iDistance*((height-height*0.1666)*0.025); // covers the distance from the sensor from cm to pixels
+  pixsDistance = iDistance*((height-height*0.1666)*0.025); 
   // limiting the range to 40 cms
   if(iDistance<40){
-    // draws the object according to the angle and the distance
   line(pixsDistance*cos(radians(iAngle)),-pixsDistance*sin(radians(iAngle)),(width-width*0.505)*cos(radians(iAngle)),-(width-width*0.505)*sin(radians(iAngle)));
   }
   popMatrix();
@@ -85,12 +77,11 @@ void drawLine() {
   pushMatrix();
   strokeWeight(9);
   stroke(30,250,60);
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
-  line(0,0,(height-height*0.12)*cos(radians(iAngle)),-(height-height*0.12)*sin(radians(iAngle))); // draws the line according to the angle
+  translate(width/2,height-height*0.074); 
+  line(0,0,(height-height*0.12)*cos(radians(iAngle)),-(height-height*0.12)*sin(radians(iAngle)));
   popMatrix();
 }
-void drawText() { // draws the texts on the screen
-  
+void drawText() { 
   pushMatrix();
   if(iDistance>40) {
   noObject = "Out of Range";
@@ -104,10 +95,10 @@ void drawText() { // draws the texts on the screen
   fill(98,245,31);
   textSize(25);
   
-  text("10cm",width-width*0.3854,height-height*0.0833);
-  text("20cm",width-width*0.281,height-height*0.0833);
-  text("30cm",width-width*0.177,height-height*0.0833);
-  text("40cm",width-width*0.0729,height-height*0.0833);
+   text("10cm",width-width*0.3925,height-height*0.0833);
+  text("20cm",width-width*0.288,height-height*0.0833);
+  text("30cm",width-width*0.183,height-height*0.0833);
+  text("40cm",width-width*0.0788,height-height*0.0833);
   textSize(40);
   text("Rakesh arduino project", width-width*0.950, height-height*0.0277);
   text("Angle: " + iAngle +" °", width-width*0.48, height-height*0.0277);
